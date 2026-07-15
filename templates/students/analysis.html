@@ -2,6 +2,72 @@
 
 {% block title %}Resume Analysis | DNR AI{% endblock %}
 
+{% block extra_head %}
+
+<style>
+    .tag-container {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 10px;
+
+    }
+
+    .keyword-tag {
+
+        white-space: normal;
+
+        word-break: break-word;
+
+        max-width: 100%;
+
+    }
+
+    .card {
+
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .tag-scroll {
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        overflow-y: hidden;
+
+        padding-bottom: 8px;
+
+        scrollbar-width: thin;
+
+    }
+
+    .tag-container {
+
+        display: flex;
+
+        flex-wrap: nowrap;
+
+        gap: 12px;
+
+        width: max-content;
+
+    }
+
+    .keyword-tag {
+
+        flex-shrink: 0;
+
+        white-space: nowrap;
+
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
 
 <div
@@ -111,22 +177,23 @@
                     <h3 style="font-size: 1.15rem;">Skills Found</h3>
                     <!-- <p class="text-secondary" style="font-size: 0.85rem;">Primary technologies expected for Django/React
                         roles detected in your resume.</p> -->
-                    <div class="tag-container">
+                    <div class="tag-scroll">
+                        <div class="tag-container">
 
-                        {% for skill in analysis.found_skills.splitlines %}
+                            {% for skill in analysis.found_skills.splitlines %}
 
-                        <span class="keyword-tag tag-found">
-                            {{ skill }}
-                        </span>
+                            <span class="keyword-tag tag-found">
+                                {{ skill }}
+                            </span>
 
-                        {% empty %}
+                            {% empty %}
 
-                        <span class="text-secondary">
-                            No core technical skills detected.
-                        </span>
+                            <span class="text-secondary">
+                                No core technical skills detected.
+                            </span>
 
-                        {% endfor %}
-
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

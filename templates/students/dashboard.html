@@ -2,6 +2,72 @@
 
 {% block title %}Dashboard | DNR AI{% endblock %}
 
+{% block extra_head %}
+
+<style>
+    .tag-container {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 10px;
+
+    }
+
+    .keyword-tag {
+
+        white-space: normal;
+
+        word-break: break-word;
+
+        max-width: 100%;
+
+    }
+
+    .card {
+
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .tag-scroll {
+
+        width: 100%;
+
+        overflow-x: auto;
+
+        overflow-y: hidden;
+
+        padding-bottom: 8px;
+
+        scrollbar-width: thin;
+
+    }
+
+    .tag-container {
+
+        display: flex;
+
+        flex-wrap: nowrap;
+
+        gap: 12px;
+
+        width: max-content;
+
+    }
+
+    .keyword-tag {
+
+        flex-shrink: 0;
+
+        white-space: nowrap;
+
+    }
+</style>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="dashboard-header">
@@ -39,7 +105,7 @@
 
     <!-- Profile -->
 
-    <!-- <div class="card metric-card">
+    <div class="card metric-card">
 
         <div class="metric-icon blue">
 
@@ -53,17 +119,25 @@
 
             <div class="metric-val">
 
+                {% if profile %}
+
                 Complete
+
+                {% else %}
+
+                Incomplete
+
+                {% endif %}
 
             </div>
 
         </div>
 
-    </div> -->
+    </div>
 
     <!-- Resume -->
 
-    <!-- <div class="card metric-card">
+    <div class="card metric-card">
 
         <div class="metric-icon green">
 
@@ -77,17 +151,25 @@
 
             <div class="metric-val">
 
-                Uploaded
+                {% if resume %}
+
+                {{ resume.analysis_status }}
+
+                {% else %}
+
+                Not Uploaded
+
+                {% endif %}
 
             </div>
 
         </div>
 
-    </div> -->
+    </div>
 
-    <!-- AI -->
+    <!-- AI Score -->
 
-    <!-- <div class="card metric-card">
+    <div class="card metric-card">
 
         <div class="metric-icon gold">
 
@@ -101,16 +183,23 @@
 
             <div class="metric-val">
 
-                85 / 100
+                {% if analysis %}
+
+                {{ analysis.overall_score }}/100
+
+                {% else %}
+
+                --
+
+                {% endif %}
 
             </div>
 
         </div>
 
-    </div> -->
+    </div>
 
 </div>
-
 <!-- ============================= -->
 
 <h2 class="section-title">
@@ -201,7 +290,7 @@
 
         <h3 style="margin-bottom:20px;">🤖 AI Career Summary</h3>
 
-        <p class="text-secondary">
+        <p class="text-secondary" style="line-height:2">
 
             {{ analysis.resume_summary }}
 
@@ -251,21 +340,24 @@
 
         </h3>
 
-        <div class="tag-container">
+        <div class="tag-scroll">
 
-            {% for skill in analysis.missing_skills.splitlines %}
+            <div class="tag-container">
 
-            <span class="keyword-tag tag-missing">
+                {% for skill in analysis.missing_skills.splitlines %}
 
-                {{ skill }}
+                <span class="keyword-tag tag-missing">
 
-            </span>
+                    {{ skill }}
 
-            {% endfor %}
+                </span>
 
+                {% endfor %}
+
+
+            </div>
 
         </div>
-
     </div>
 
     <!-- Existing Skills -->
@@ -278,19 +370,20 @@
 
         </h3>
 
-        <div class="tag-container">
+        <div class="tag-scroll">
+            <div class="tag-container">
 
-            {% for skill in analysis.found_skills.splitlines %}
+                {% for skill in analysis.found_skills.splitlines %}
 
-            <span class="keyword-tag tag-found">
+                <span class="keyword-tag tag-found">
 
-                {{ skill }}
+                    {{ skill }}
 
-            </span>
+                </span>
 
-            {% endfor %}
+                {% endfor %}
 
-
+            </div>
         </div>
 
     </div>
@@ -324,7 +417,46 @@
 
     </div>
 
+    <div class="card">
 
+        <h3 style="margin-bottom:20px;">
+
+            📈 Career Progress
+
+        </h3>
+
+        <div style="margin-bottom:20px;">
+
+            <label>Profile Completion</label>
+
+            <div class="progress-bar-container" style="display:block;">
+                <div class="progress-bar-fill" style="width:90%;"></div>
+            </div>
+
+        </div>
+
+        <div style="margin-bottom:20px;">
+
+            <label>Resume Quality</label>
+
+            <div class="progress-bar-container" style="display:block;">
+                <div class="progress-bar-fill" style="width: {{ analysis.overall_score }}%;"></div>
+            </div>
+
+        </div>
+
+        <div>
+
+            <label>Placement Readiness</label>
+
+            <div class="progress-bar-container" style="display:block;">
+                <div class="progress-bar-fill" style="width: {{ analysis.interview_readiness_score|floatformat:0 }}%">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 <!-- ========================================== -->
@@ -464,48 +596,8 @@
 
 <div class="grid grid-cols-2">
 
-    <div class="card">
 
-        <h3 style="margin-bottom:20px;">
-
-            📈 Career Progress
-
-        </h3>
-
-        <div style="margin-bottom:20px;">
-
-            <label>Profile Completion</label>
-
-            <div class="progress-bar-container" style="display:block;">
-                <div class="progress-bar-fill" style="width:90%;"></div>
-            </div>
-
-        </div>
-
-        <div style="margin-bottom:20px;">
-
-            <label>Resume Quality</label>
-
-            <div class="progress-bar-container" style="display:block;">
-                <div class="progress-bar-fill" style="width: {{ analysis.overall_score }}%;"></div>
-            </div>
-
-        </div>
-
-        <div>
-
-            <label>Placement Readiness</label>
-
-            <div class="progress-bar-container" style="display:block;">
-                <div class="progress-bar-fill" style="width: {{ analysis.interview_readiness_score|floatformat:0 }}%">
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card">
+    <!-- <div class="card">
 
         <h3 style="margin-bottom:20px;">
 
@@ -579,7 +671,7 @@
 
         </div>
 
-    </div>
+    </div> -->
 
 </div>
 <div class="table-container animate-slide-up">
@@ -587,7 +679,7 @@
         <thead>
             <tr>
                 <th>File Name</th>
-                <th>Target Job Role</th>
+                <th>Job Details</th>
                 <th>ATS Score</th>
                 <th>Status</th>
                 <th>Scanned Date</th>
@@ -612,7 +704,7 @@
 
                 <td>
 
-                    {{ resume.target_job_role }}
+                    {{ resume.job_description }}
 
                 </td>
 

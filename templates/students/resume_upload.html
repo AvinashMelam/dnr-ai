@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume | DNR AI{% endblock %}
+
+{% block content %}
+
+<div class="upload-container">
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 8px;">Upload Your Resume</h1>
+        <p class="text-secondary">Upload your resume and optionally paste the Job Description for company-specific AI
+            analysis.
+        </p>
+    </div>
+
+    <div class="card">
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group" style="margin-bottom:28px;">
+
+                <label class="form-label">
+
+                    Job Description (Optional)
+
+                </label>
+
+                <textarea name="job_description" id="jobDescription" rows="8" class="form-input"
+                    placeholder="Paste the complete Job Description from LinkedIn, Naukri, Indeed or the company careers page for a company-specific AI analysis..."></textarea>
+
+                <span class="text-muted" style="font-size:.85rem;display:block;margin-top:8px;">
+
+                    Leave empty if you want a general resume review.
+
+                </span>
+
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Resume File</label>
+
+                <div class="dropzone-area" id="dropzone">
+                    <input type="file" name="resume_file" id="resumeFile" class="file-input" accept=".pdf" required>
+                    <div class="dropzone-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Drag & drop your file here</h3>
+                        <p class="text-secondary" style="font-size: 0.85rem;">or click to browse from device</p>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.8rem;">Supports PDF(Max 5MB)</span>
+                </div>
+
+                <div class="selected-file-badge" id="fileBadge">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    <span id="fileNameDisplay"
+                        style="flex: 1; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">filename.pdf</span>
+                    <button type="button" id="removeFileBtn"
+                        style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; line-height: 1;">&times;</button>
+                </div>
+
+                <div class="progress-bar-container" id="progressBar">
+                    <div class="progress-bar-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; margin-top: 32px;"
+                disabled>
+                Upload Resume
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('resumeFile');
+    const fileBadge = document.getElementById('fileBadge');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const removeFileBtn = document.getElementById('removeFileBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const targetInput = document.getElementById('jobDescription');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+
+    // Trigger click on dropzone
+    dropzone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Check if form is valid to enable submit button
+    function checkFormValidity() {
+        submitBtn.disabled = fileInput.files.length === 0;
+    }
+
+    targetInput.addEventListener('input', checkFormValidity);
+
+    // Handle drag events
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+        }, false);
+    });
+
+    // Handle drop file selection
+    dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelection(files[0]);
+        }
+    });
+
+    // Handle browse file selection
+    fileInput.addEventListener('change', (e) => {
+        if (fileInput.files.length > 0) {
+            handleFileSelection(fileInput.files[0]);
+        }
+    });
+
+    function handleFileSelection(file) {
+        fileNameDisplay.textContent = file.name;
+        dropzone.style.display = 'none';
+        fileBadge.style.display = 'flex';
+        checkFormValidity();
+    }
+
+    // Remove file selection
+    removeFileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fileInput.value = '';
+        fileBadge.style.display = 'none';
+        dropzone.style.display = 'flex';
+        checkFormValidity();
+    });
+
+</script>
+{% endblock %}

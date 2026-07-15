@@ -1,0 +1,778 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Resume Analysis | DNR AI{% endblock %}
+
+{% block content %}
+
+<div class="app-container">
+
+    <!-- Header Navigation Bar -->
+    <header class="navbar-header">
+        <div class="navbar-container">
+            <a href="#" class="brand-logo">DNR AI ADMIN DASHBOARD</a>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Content Area -->
+    <main class="main-content animate-slide-up">
+
+        <!-- ROW 1: Top Metrics Grid (3 Columns) -->
+        <section class="grid grid-cols-3 metrics-grid">
+            <!-- Total Students Card -->
+            <div class="card metric-card">
+                <div class="metric-icon blue">
+                    <!-- Simple User Icon representation -->
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path
+                            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm14 10v-2a4 4 0 0 0-3-3.87m-4-12a4 4 0 0 1 0 7.75">
+                        </path>
+                    </svg>
+                </div>
+                <div class="metric-info">
+                    <h3>Total Students</h3>
+                    <div class="metric-val text-primary-gradient">{{ total_students }}</div>
+                </div>
+            </div>
+
+            <!-- Resumes Uploaded Card -->
+            <div class="card metric-card">
+                <div class="metric-icon green">
+                    <!-- Document Icon -->
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                </div>
+                <div class="metric-info">
+                    <h3>Resumes Uploaded</h3>
+                    <div class="metric-val text-secondary-gradient">{{ total_resumes }}</div>
+                </div>
+            </div>
+
+            <!-- AI Analyses Card -->
+            <div class="card metric-card">
+                <div class="metric-icon gold">
+                    <!-- AI/Sparkle Icon -->
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                        </polygon>
+                    </svg>
+                </div>
+                <div class="metric-info">
+                    <h3>AI Analyses</h3>
+                    <div class="metric-val" style="color: #fbbf24;">{{ total_analysis }}</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROW 2: Primary Score Metrics Grid (3 Columns) -->
+        <section class="grid grid-cols-3 metrics-grid" style="margin-top: -16px;">
+            <!-- Avg ATS Score Card -->
+            <div class="card metric-card">
+                <div class="metric-icon blue">
+                    <span style="font-family:'Outfit'; font-weight:800; font-size:1.1rem;">ATS</span>
+                </div>
+                <div class="metric-info">
+                    <h3>Average ATS Score</h3>
+                    <div class="metric-val">{{ avg_ats }}%</div>
+                </div>
+            </div>
+
+            <!-- Avg Technical Card -->
+            <div class="card metric-card">
+                <div class="metric-icon green">
+                    <span style="font-family:'Outfit'; font-weight:800; font-size:1.1rem;">TEC</span>
+                </div>
+                <div class="metric-info">
+                    <h3>Average Technical</h3>
+                    <div class="metric-val">{{avg_technical}}%</div>
+                </div>
+            </div>
+
+            <!-- Interview Ready Card -->
+            <div class="card metric-card">
+                <div class="metric-icon gold">
+                    <span style="font-family:'Outfit'; font-weight:800; font-size:1.1rem;">RDY</span>
+                </div>
+                <div class="metric-info">
+                    <h3>Interview Ready</h3>
+                    <div class="metric-val">{{avg_interview}}%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROW 3: Main Analytical Columns (2-Column Layout Grid) -->
+        <div class="grid grid-cols-2" style="margin-top: 24px;">
+
+            <!-- COLUMN A -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+
+                <!-- Profile Completion Card -->
+                <!-- <div class="card">
+                    <h3 class="section-title" style="margin-bottom: 16px;">Profile Completion</h3>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div
+                            style="flex: 1; height: 16px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div
+                                style="width: 72%; height: 100%; background: var(--primary-gradient); border-radius: 99px;">
+                            </div>
+                        </div>
+                        <span
+                            style="font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem; color: var(--text-main);">72%</span>
+                    </div>
+                </div> -->
+
+                <!-- Branch-wise Distribution Lists -->
+                <div class="card">
+                    <h3 class="section-title">Branch-wise Distribution</h3>
+
+                    <!-- Internal Tab/Switch Header Layout for Branch Metrics -->
+                    <div class="tabs-header" style="margin-bottom: 16px;">
+                        <button class="tab-btn active" id="btn-branch-count">Student Counts</button>
+                        <button class="tab-btn" id="btn-branch-ats">Average ATS Score</button>
+                    </div>
+
+                    <!-- Panel 1: Counts -->
+                    <div id="branch-count-panel">
+                        {% for branch in branch_stats %}
+
+                        <div class="checklist-item"
+                            style="padding: 10px 0; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600;">{{ branch.branch }}</span>
+                            <span class="badge badge-primary" style="font-size: 0.9rem; padding: 4px 12px;">
+                                {{ branch.total }} Students</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Panel 2: Branch ATS (Hidden by default, easy to activate dynamically) -->
+                    <div id="branch-ats-panel" style="display: none;">
+                        {% for b in branch_ats %}
+
+                        <div class="checklist-item"
+                            style="padding: 10px 0; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600;">{{ b.resume__student__branch }}</span>
+                            <span class="badge badge-success" style="font-size: 0.9rem; padding: 4px 12px;">
+                                {{ b.avg_ats}} Avg
+                                ATS</span>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+
+                <!-- # new will remove -->
+                <!-- <div class="card">
+
+                    <h3>Students by Branch</h3>
+
+                    <canvas id="branchChart"></canvas>
+
+                </div> -->
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>Students by Branch</h3>
+                    </div>
+
+                    <div id="branchChart"></div>
+
+                </div>
+
+                <!-- Django data -->
+
+                {{ branch_labels|json_script:"branch-labels" }}
+                {{ branch_data|json_script:"branch-data" }}
+
+
+                <!-- Target Job Roles -->
+                <div class="card">
+                    <h3 class="section-title">Top Target Job Roles</h3>
+                    <div class="tag-container">
+                        <span class="keyword-tag tag-found">Python Developer</span>
+                        <span class="keyword-tag tag-found">Data Analyst</span>
+                        <span class="keyword-tag tag-found">Java Developer</span>
+                        <span class="keyword-tag tag-found">Full Stack Developer</span>
+                        <span class="keyword-tag tag-found">AI Engineer</span>
+                    </div>
+                </div>
+
+                <!-- Interview Readiness breakdown -->
+                <div class="card">
+                    <h3 class="section-title">Interview Readiness</h3>
+                    <div class="checklist-item" style="justify-content: space-between; padding: 12px 0;">
+                        <span style="font-weight: 600;">Ready(&gt;80)</span>
+                        <span class="badge badge-success"
+                            style="font-size: 0.9rem; min-width: 60px; text-align: center;">{{ready}}</span>
+                    </div>
+                    <div class="checklist-item" style="justify-content: space-between; padding: 12px 0;">
+                        <span style="font-weight: 600;">Almost Ready(60-80)</span>
+                        <span class="badge badge-warning"
+                            style="font-size: 0.9rem; min-width: 60px; text-align: center;">{{almost_ready}}</span>
+                    </div>
+                    <div class="checklist-item"
+                        style="justify-content: space-between; padding: 12px 0; border-bottom: none;">
+                        <span style="font-weight: 600;">Needs Improvement(&lt;60) </span>
+                        <span class="badge badge-danger"
+                            style="font-size: 0.9rem; min-width: 60px; text-align: center;">{{needs_improvement}}</span>
+                    </div>
+                </div>
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>Placement Readiness</h3>
+                    </div>
+
+                    <div id="interviewChart"></div>
+
+                </div>
+
+                {{ interview_percentage|json_script:"interview-percentage" }}
+
+            </div>
+
+            <!-- COLUMN B -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+
+                <!-- Resume Quality Distribution (Using Progress Bars inside Card) -->
+                <div class="card">
+                    <h3 class="section-title">Resume Quality Distribution</h3>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Excellent</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{excellent_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{excellent_percent}}%; height: 100%; background:
+                                var(--secondary); border-radius: 99px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Good</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{good_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{good_percent}}%; height: 100%; background:
+                                var(--primary-gradient); border-radius: 99px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Average</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{average_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{average_percent}}%; height: 100%; background: #f59e0b;
+                                border-radius: 99px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Poor</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{poor_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{poor_percent}}%; height: 100%; background: #ef4444;
+                                border-radius: 99px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3>Resume Quality Distribution</h3>
+
+                    </div>
+
+                    <div id="qualityChart"></div>
+
+                </div>
+
+                {{ quality_labels|json_script:"quality-labels" }}
+
+                {{ quality_data|json_script:"quality-data" }}
+
+                <!-- Branch wise ATS  -->
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3>Average ATS Score by Branch</h3>
+
+                    </div>
+
+                    <div id="branchATSChart"></div>
+
+                </div>
+
+                {{ branch_ats_labels|json_script:"branch-ats-labels" }}
+
+                {{ branch_ats_data|json_script:"branch-ats-data" }}
+
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>Branch Performance</h3>
+                    </div>
+
+                    <table class="table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Branch</th>
+
+                                <th>ATS</th>
+
+                                <th>Technical</th>
+
+                                <th>Job Match</th>
+
+                                <th>Interview</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for branch in branch_performance %}
+
+                            <tr>
+
+                                <td>{{ branch.resume__student__branch }}</td>
+
+                                <td>{{ branch.avg_ats|floatformat:0 }}%</td>
+
+                                <td>{{ branch.avg_technical|floatformat:0 }}%</td>
+
+                                <td>{{ branch.avg_job|floatformat:0 }}%</td>
+
+                                <td>{{ branch.avg_interview|floatformat:0 }}%</td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- Missing Skills Checklist -->
+                <div class="card">
+                    <h3 class="section-title" style="color: #ef4444;">Most Missing Skills</h3>
+                    <div class="tag-container">
+                        <span class="keyword-tag tag-missing">Docker</span>
+                        <span class="keyword-tag tag-missing">AWS</span>
+                        <span class="keyword-tag tag-missing">Git</span>
+                        <span class="keyword-tag tag-missing">React</span>
+                        <span class="keyword-tag tag-missing">SQL Optimization</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ROW 4: Table (Full-width Data Container) -->
+        <section style="margin-top: 32px;">
+            <h3 class="section-title">Top Performer's Resumes</h3>
+            <div class="table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Branch</th>
+                            <th>ATS Score</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for top in top_students %}
+                        <tr>
+
+                            <td>{{ top.resume.student.user.username }}</td>
+
+
+                            <td>{{ top.resume.student.branch }}</td>
+
+                            <td>
+                                <span class="badge badge-success">
+                                    {{ top.ats_score }}%
+                                </span>
+                            </td>
+
+                            <td>
+
+                                {% if top.interview_readiness_score >= 80 %}
+
+                                <span class="badge badge-success">
+                                    Interview Ready
+                                </span>
+
+                                {% elif top.interview_readiness_score >= 60 %}
+
+                                <span class="badge badge-warning">
+                                    Almost Ready
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge badge-danger">
+                                    Needs Improvement
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <a href="{% url 'analysis' top.resume.id %}" class="btn btn-outline btn-sm">
+
+                                    View Analysis
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+
+</div>
+
+<!-- Script to toggle mobile menu and switch the local tab viewports -->
+
+
+<script>
+    const branchLabels = JSON.parse(
+        document.getElementById("branch-labels").textContent
+    );
+
+    const branchData = JSON.parse(
+        document.getElementById("branch-data").textContent
+    );
+
+    // Resume Quality
+    const qualityLabels = JSON.parse(
+        document.getElementById("quality-labels").textContent
+    );
+
+    const qualityData = JSON.parse(
+        document.getElementById("quality-data").textContent
+    );
+
+    // Branch wise ATS
+    const branchATSLabels = JSON.parse(
+        document.getElementById("branch-ats-labels").textContent
+    );
+
+    const branchATSData = JSON.parse(
+        document.getElementById("branch-ats-data").textContent
+    );
+
+    // Interview readyness
+    const interviewPercentage = JSON.parse(
+        document.getElementById("interview-percentage").textContent
+    );
+
+    // Apex Chart
+
+    var options = {
+
+        chart: {
+            type: 'pie',
+            height: 380
+        },
+
+        labels: branchLabels,
+
+        series: branchData,
+
+        legend: {
+            position: 'bottom'
+        }
+
+    };
+
+    var chart = new ApexCharts(
+        document.querySelector("#branchChart"),
+        options
+    );
+
+    chart.render();
+
+    // quality Chart
+
+    var qualityOptions = {
+
+        chart: {
+
+            type: 'donut',
+
+            height: 380
+
+        },
+
+        labels: qualityLabels,
+
+        series: qualityData,
+
+        legend: {
+
+            position: 'bottom'
+
+        },
+
+        plotOptions: {
+
+            pie: {
+
+                donut: {
+
+                    size: '65%'
+
+                }
+
+            }
+
+        },
+
+        responsive: [{
+
+            breakpoint: 768,
+
+            options: {
+
+                chart: {
+
+                    height: 300
+
+                }
+
+            }
+
+        }]
+
+    };
+
+    var qualityChart = new ApexCharts(
+
+        document.querySelector("#qualityChart"),
+
+        qualityOptions
+
+    );
+
+    qualityChart.render();
+
+
+    // Branch wise ATS
+
+    var atsOptions = {
+
+        chart: {
+
+            type: 'bar',
+
+            height: 380,
+
+            toolbar: {
+
+                show: false
+
+            }
+
+        },
+
+        series: [{
+
+            name: 'ATS Score',
+
+            data: branchATSData
+
+        }],
+
+        xaxis: {
+
+            categories: branchATSLabels
+
+        },
+
+        yaxis: {
+
+            max: 100,
+
+            title: {
+
+                text: 'Average ATS Score'
+
+            }
+
+        },
+
+        dataLabels: {
+
+            enabled: true
+
+        },
+
+        plotOptions: {
+
+            bar: {
+
+                borderRadius: 8,
+
+                columnWidth: '50%'
+
+            }
+
+        }
+
+    };
+
+    var atsChart = new ApexCharts(
+
+        document.querySelector("#branchATSChart"),
+
+        atsOptions
+
+    );
+
+    atsChart.render();
+
+    // Interview readyness
+
+    var interviewOptions = {
+
+        chart: {
+            type: 'radialBar',
+            height: 380
+        },
+
+        series: [interviewPercentage],
+
+        labels: ['Placement Readiness'],
+
+        plotOptions: {
+
+            radialBar: {
+
+                hollow: {
+                    size: '65%'
+                },
+
+                dataLabels: {
+
+                    name: {
+                        fontSize: '18px'
+                    },
+
+                    value: {
+                        fontSize: '32px'
+                    }
+
+                }
+
+            }
+
+        }
+
+    };
+
+    var interviewChart = new ApexCharts(
+
+        document.querySelector("#interviewChart"),
+
+        interviewOptions
+
+    );
+
+    interviewChart.render();
+
+    // Simple Header Mobile Toggle logic
+    const toggleBtn = document.getElementById('mobile-nav-toggle');
+    const menu = document.getElementById('navbar-menu');
+    if (toggleBtn && menu) {
+        toggleBtn.addEventListener('click', () => {
+            menu.classList.toggle('open');
+        });
+    }
+
+    // Branch Switcher Logic
+    const btnCount = document.getElementById('btn-branch-count');
+    const btnAts = document.getElementById('btn-branch-ats');
+    const countPanel = document.getElementById('branch-count-panel');
+    const atsPanel = document.getElementById('branch-ats-panel');
+
+    if (btnCount && btnAts) {
+        btnCount.addEventListener('click', () => {
+            btnCount.classList.add('active');
+            btnAts.classList.remove('active');
+            countPanel.style.display = 'block';
+            atsPanel.style.display = 'none';
+        });
+
+        btnAts.addEventListener('click', () => {
+            btnAts.classList.add('active');
+            btnCount.classList.remove('active');
+            countPanel.style.display = 'none';
+            atsPanel.style.display = 'block';
+        });
+    }
+
+
+    // Charts
+    const branchChart = new Chart(
+        document.getElementById("branchChart"),
+        {
+            type: "pie",
+
+            data: {
+                labels: branchLabels,
+                datasets: [{
+                    data: branchData
+                }]
+            }
+        });
+
+
+</script>
+
+{% endblock %}

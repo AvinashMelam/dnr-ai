@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Resume History | DNR AI{% endblock %}
+
+{% block content %}
+
+<div
+    style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+        <h1 style="font-size: 2.25rem; margin-bottom: 6px;">My Resumes</h1>
+        <p class="text-secondary">Manage your uploaded resumes and analyze them against different job opportunities.</p>
+    </div>
+    <div>
+        <a href="/resume/upload/" class="btn btn-primary">Start New Analysis</a>
+    </div>
+</div>
+
+<div class="history-timeline animate-slide-up">
+
+    {% for resume in resumes %}
+
+    <div class="timeline-item">
+
+        <div class="card timeline-card">
+
+            <div class="timeline-meta">
+
+                <span class="timeline-date">
+                    {{ resume.uploaded_at|date:"d M Y" }}
+                </span>
+
+                <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:4px;">
+                    {{ resume.resume_file.name|cut:"resumes/" }}
+                </h3>
+
+                {% if resume.target_job_role %}
+                <p class="text-muted">
+                    Target Role : {{ resume.target_job_role }}
+                </p>
+                {% endif %}
+
+                <p class="text-muted">
+                    Status : {{ resume.analysis_status }}
+                </p>
+
+            </div>
+
+            <div class="timeline-score">
+
+                <div style="font-size:1rem;font-weight:600;margin-bottom:15px;">
+
+                    {{ resume.analysis_status }}
+
+                </div>
+
+                <div style="display:flex;gap:8px;justify-content:flex-end;">
+
+                    <a href="{{ resume.resume_file.url }}" class="btn btn-outline btn-sm">
+
+                        View
+
+                    </a>
+
+                    {% if resume.analysis_status == "Completed" %}
+
+                    <a href="/analysis/{{ resume.id }}/" class="btn btn-success btn-sm">
+                        View Report
+                    </a>
+
+                    {% else %}
+
+                    <a href="/resume/analyze/{{ resume.id }}/" class="btn btn-primary btn-sm analyze-btn">
+
+                        Analyze
+
+                    </a>
+
+                    <div id="loadingOverlay">
+
+                        <div class="loading-card">
+
+                            <div class="ai-loader">
+                                <span></span>
+                            </div>
+
+
+                            <h2>🤖 DNR AI</h2>
+
+                            <p id="loadingText">
+                                Extracting Resume...
+                            </p>
+
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+
+                    <a href="#" class="btn btn-danger btn-sm">
+
+                        Delete
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="card">
+
+        <h3>No resumes uploaded yet.</h3>
+
+        <p class="text-secondary">
+            Upload your first resume to begin AI analysis.
+        </p>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<script>
+
+    const messages = [
+
+        "📄 Extracting Resume...",
+
+        "🧠 Detecting Skills...",
+
+        "🎯 Matching ATS Keywords...",
+
+        "📊 Calculating Scores...",
+
+        "💼 Identifying Job Roles...",
+
+        "🚀 Generating Career Advice...",
+
+        "✅ Preparing Report..."
+
+    ];
+
+    document.querySelectorAll(".analyze-btn").forEach(btn => {
+
+        btn.addEventListener("click", function () {
+            this.classList.add("disabled");
+
+            document.getElementById("loadingOverlay").style.display = "flex";
+
+            let i = 0;
+
+            setInterval(function () {
+
+                document.getElementById("loadingText").innerHTML =
+
+                    messages[i % messages.length];
+
+                i++;
+
+            }, 1500);
+
+        });
+
+    });
+
+</script>
+{% endblock %}

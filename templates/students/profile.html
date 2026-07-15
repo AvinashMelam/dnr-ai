@@ -1,0 +1,413 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | DNR AI{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom:32px;">
+
+    <h1 style="font-size:2.3rem;margin-bottom:8px;">
+
+        Student Profile
+
+    </h1>
+
+    <p class="text-secondary">
+
+        Complete your academic and professional profile to receive accurate
+        AI-powered career recommendations.
+
+    </p>
+
+</div>
+
+<div class="profile-layout animate-slide-up">
+    <!-- Left Profile summary card -->
+    <div class="card avatar-upload-container">
+
+        <div class="avatar-wrapper">
+
+            <div class="avatar-inner">
+
+                <div class="avatar-placeholder">
+
+                    {{ request.user.username.0|upper }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <h3 style="margin-bottom:6px;">
+
+            {{ request.user.username }}
+
+        </h3>
+
+        <p class="text-muted">
+
+            {{ request.user.email }}
+
+        </p>
+
+        <hr style="width:100%;margin:20px 0;">
+
+        <div style="width:100%;text-align:left;line-height:2;">
+
+            <p>
+
+                <strong>Profile Status</strong>
+
+                <span style="float:right;color:#10B981;">
+
+                    In Progress
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>Resume</strong>
+
+                <span style="float:right;">
+
+                    Not Uploaded
+
+                </span>
+
+            </p>
+
+            <p>
+
+                <strong>AI Analysis</strong>
+
+                <span style="float:right;">
+
+                    Pending
+
+                </span>
+
+            </p>
+
+        </div>
+
+        <div style="margin-top:25px;width:100%;">
+
+            <label style="font-size:14px;">
+
+                Profile Completion
+
+            </label>
+
+            <div class="progress-bar-container" style="display:block;">
+
+                <div class="progress-bar-fill" style="width:30%;"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Right Profile edit form -->
+    <div class="card">
+        <form method="post">
+
+            {% csrf_token %}
+
+            <!-- ====================== -->
+
+            <h2 style="font-size:1.5rem;margin-bottom:25px;
+        border-bottom:1px solid var(--card-border);
+        padding-bottom:12px;">
+
+                🎓 Academic Information
+
+            </h2>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    College Name
+
+                </label>
+
+                <input type="text" name="college_name" class="form-input"
+                    value="DNR College of Engineering & Technology" readonly>
+
+            </div>
+
+            <div class="grid grid-cols-2" style="margin-bottom:20px;">
+
+                <div class="form-group">
+
+                    <label class="form-label">
+
+                        Branch
+
+                    </label>
+
+                    <select name="branch" class="form-input">
+
+                        <option>Select Branch</option>
+
+                        <option value="CSE">CSE</option>
+                        <option value="AI&DS">AI & DS</option>
+                        <option value="AIML">AIML</option>
+                        <option value="IT">IT</option>
+                        <option value="ECE">ECE</option>
+                        <option value="EEE">EEE</option>
+                        <option value="CE">CE</option>
+                        <option value="ME">ME</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label class="form-label">
+
+                        Year
+
+                    </label>
+
+                    <select name="year" class="form-input">
+
+                        <option value="">Select Year</option>
+
+                        <option value="1">1st Year</option>
+
+                        <option value="2">2nd Year</option>
+
+                        <option value="3">3rd Year</option>
+
+                        <option value="4">4th Year</option>
+
+                        <option value="5">Passed Out</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- ====================== -->
+
+            <h2 style="font-size:1.5rem;
+        margin-top:35px;
+        margin-bottom:25px;
+        border-bottom:1px solid var(--card-border);
+        padding-bottom:12px;">
+
+                🤖 AI Settings
+
+            </h2>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    Gemini API Key
+                    {% if profile.gemini_api_key %}
+
+                    <span class="badge badge-success">
+
+                        Connected
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge badge-danger">
+
+                        Not Connected
+
+                    </span>
+
+                    {% endif %}
+                </label>
+
+                <input type="password" name="gemini_api_key" id="gemini_api_key" class="form-input"
+                    placeholder="Paste your Gemini API Key">
+
+                <small class="text-muted">
+
+                    Your API key is securely stored and used only for AI analysis.
+
+                </small>
+
+                <button type="button" id="testApiBtn" class="btn btn-outline" style="margin-top:10px;">
+
+                    Test API Key
+
+                </button>
+
+                <div id="apiStatus" style="margin-top:10px;"></div>
+            </div>
+
+
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="btn btn-outline">
+
+                Generate Gemini API Key
+
+            </a>
+
+            <!-- ====================== -->
+
+            <h2 style="font-size:1.5rem;
+        margin-top:35px;
+        margin-bottom:25px;
+        border-bottom:1px solid var(--card-border);
+        padding-bottom:12px;">
+
+                🔗 Professional Links
+
+            </h2>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    GitHub URL
+
+                </label>
+
+                <input type="url" name="github" class="form-input" placeholder="https://github.com/username"
+                    value="{{ profile.github|default:'' }}">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    LinkedIn URL
+
+                </label>
+
+                <input type="url" name="linkedin" class="form-input" placeholder="https://linkedin.com/in/username"
+                    value="{{ profile.linkedin|default:'' }}">
+
+            </div>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    Portfolio Website
+
+                </label>
+
+                <input type="url" name="portfolio" class="form-input" placeholder="https://yourportfolio.com"
+                    value="{{ profile.portfolio|default:'' }}">
+
+            </div>
+
+            <!-- ====================== -->
+
+            <h2 style="font-size:1.5rem;
+        margin-top:35px;
+        margin-bottom:25px;
+        border-bottom:1px solid var(--card-border);
+        padding-bottom:12px;">
+
+                📝 About Me
+
+            </h2>
+
+            <div class="form-group">
+
+                <label class="form-label">
+
+                    Tell us about yourself
+
+                </label>
+
+                <textarea name="about_me" rows="5" class="form-input" style="resize:vertical;"
+                    placeholder="Write a short introduction about yourself, your interests, achievements and career aspirations...">{{ profile.about_me|default:'' }}</textarea>
+
+            </div>
+
+            <!-- ====================== -->
+
+            <div style="display:flex;
+        justify-content:flex-end;
+        gap:15px;
+        margin-top:35px;">
+
+                <button type="reset" class="btn btn-outline">
+
+                    Reset
+
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+
+                    Save Profile
+
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById("testApiBtn").addEventListener("click", function () {
+        const btn = document.getElementById("testApiBtn");
+        const status = document.getElementById("apiStatus");
+        const apiKey = document.getElementById("gemini_api_key").value.trim();
+
+        // 1. If empty, stop early and alert the student
+        if (!apiKey) {
+            status.innerHTML = "<span style='color:orange;'>⚠️ Please enter an API key first.</span>";
+            return;
+        }
+
+        // 2. Disable button & show the loader
+        btn.disabled = true;
+        btn.innerText = "Checking...";
+        status.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; color: #555;">
+                <div class="loader-spinner"></div>
+                <span>Verifying key with Google...</span>
+            </div>
+        `;
+
+        // 3. Fire background request
+        fetch("/test-api-key/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "api_key=" + encodeURIComponent(apiKey)
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 4. Re-enable button
+                btn.disabled = false;
+                btn.innerText = "Test Key";
+
+                // 5. Update status with final result
+                if (data.status == "success") {
+                    status.innerHTML = "<span style='color:green;'>✅ Valid Gemini API Key</span>";
+                } else {
+                    status.innerHTML = "<span style='color:red;'>❌ Invalid Gemini API Key: " + data.message + "</span>";
+                }
+            })
+            .catch(error => {
+                // Re-enable button on complete failure
+                btn.disabled = false;
+                btn.innerText = "Test Key";
+                status.innerHTML = "<span style='color:red;'>❌ Server connection failed.</span>";
+                console.error("Error:", error);
+            });
+    });
+</script>
+{% endblock %}

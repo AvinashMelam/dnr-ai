@@ -1,0 +1,82 @@
+<header class="navbar-header">
+    <div class="navbar-container">
+        <a href="/home/" class="brand-logo">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="32" height="32" rx="8" fill="url(#logo-grad)" />
+                <path d="M9 10H16C19.3137 10 22 12.6863 22 16C22 19.3137 19.3137 22 16 22H9V10Z" stroke="white"
+                    stroke-width="2.5" stroke-linejoin="round" />
+                <path d="M14 10V22" stroke="white" stroke-width="2.5" />
+                <defs>
+                    <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#6366F1" />
+                        <stop offset="1" stop-color="#8B5CF6" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span>DNR AI</span>
+        </a>
+
+        <nav class="nav-nav" id="navMenu">
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+            {% if request.user.is_authenticated %}
+            <a href="/dashboard/"
+                class="nav-link {% if '/students/dashboard/' in request.path %}active{% endif %}">Dashboard</a>
+            <a href="/resume/upload/"
+                class="nav-link {% if '/students/resume-upload/' in request.path %}active{% endif %}">Upload Resume</a>
+            <a href="/resume/history/"
+                class="nav-link {% if '/resume/history/' in request.path %}active{% endif %}">Resume History</a>
+            <!-- <a href="/students/feedback/"
+                class="nav-link {% if '/students/feedback/' in request.path %}active{% endif %}">Feedback</a> -->
+            {% if request.user.is_staff %}
+            <a href="/admin/"
+                class="nav-link {% if '/dashboard/admin-dashboard/' in request.path %}active{% endif %}">Admin</a>
+            {% endif %}
+
+            <!-- Mobile Only Actions -->
+            <div class="nav-actions-mobile">
+                <a href="/students/profile/" class="btn btn-outline btn-sm">Profile</a>
+                <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+            {% else %}
+            <div class="nav-actions-mobile">
+                <a href="/login/" class="btn btn-outline btn-sm">Sign In</a>
+                <a href="/register/" class="btn btn-primary btn-sm">Get Started</a>
+            </div>
+            {% endif %}
+        </nav>
+
+        <div class="nav-actions">
+            {% if request.user.is_authenticated %}
+            <a href="/profile/" class="btn btn-outline btn-sm">Profile</a>
+            <a href="/logout/" class="btn btn-danger btn-sm">Logout</a>
+            {% else %}
+            <a href="/login/" class="btn btn-outline btn-sm">Sign In</a>
+            <a href="/register/" class="btn btn-primary btn-sm">Get Started</a>
+            {% endif %}
+        </div>
+
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+</header>
+
+<script>
+    // Toggle Mobile menu
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    if (hamburgerBtn && navMenu) {
+        hamburgerBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+            // Animate hamburger lines
+            const spans = hamburgerBtn.querySelectorAll('span');
+            spans[0].style.transform = navMenu.classList.contains('open') ? 'rotate(45deg) translate(6px, 6px)' : 'none';
+            spans[1].style.opacity = navMenu.classList.contains('open') ? '0' : '1';
+            spans[2].style.transform = navMenu.classList.contains('open') ? 'rotate(-45deg) translate(5px, -5px)' : 'none';
+        });
+    }
+</script>

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account | DNR AI{% endblock %}
+
+{% block content %}
+<div style="display: flex; align-items: center; justify-content: center; min-height: 80vh; padding: 40px 0;">
+    <div class="card animate-slide-up"
+        style="max-width: 500px; width: 100%; padding: 40px; border-color: rgba(99, 102, 241, 0.15); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+        <div class="text-center" style="margin-bottom: 32px;">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="margin-bottom: 16px;">
+                <rect width="32" height="32" rx="8" fill="url(#logo-grad)" />
+                <path d="M9 10H16C19.3137 10 22 12.6863 22 16C22 19.3137 19.3137 22 16 22H9V10Z" stroke="white"
+                    stroke-width="2.5" stroke-linejoin="round" />
+                <path d="M14 10V22" stroke="white" stroke-width="2.5" />
+                <defs>
+                    <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#6366F1" />
+                        <stop offset="1" stop-color="#8B5CF6" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h1 style="font-size: 1.75rem; margin-bottom: 8px;">Create Account</h1>
+            <p class="text-secondary" style="font-size: 0.9rem;">Start optimizing your resume for ATS platforms
+                instantly.</p>
+        </div>
+
+        <form method="post" action="" style="display: flex; flex-direction: column; gap: 20px;">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username" class="form-label">Username</label>
+                <input type="text" name="username" id="id_username" class="form-input" placeholder="johndoe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email" class="form-label">Email Address</label>
+                <input type="email" name="email" id="id_email" class="form-input" placeholder="john@example.com"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_password" class="form-label">Password</label>
+                <input type="password" name="password" id="id_password" class="form-input" placeholder="••••••••"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Create Account</button>
+        </form>
+
+        <div class="text-center" style="margin-top: 28px; font-size: 0.9rem; color: var(--text-secondary);">
+            Already have an account? <a href="/login/" class="text-primary-gradient" style="font-weight: 600;">Sign
+                In</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

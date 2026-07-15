@@ -1,0 +1,702 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | DNR AI{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+
+    <div class="dashboard-title">
+        <h1>Welcome, {{ request.user.username }} 👋</h1>
+        <p class="text-secondary">
+            Welcome to your AI Career & Placement Dashboard. Complete your profile,
+            upload your resume and receive personalized AI-powered career insights.
+        </p>
+    </div>
+
+    <div>
+        <a href="/resume/upload/" class="btn btn-primary">
+
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="16" />
+
+            </svg>
+
+            Upload Resume
+
+        </a>
+    </div>
+
+</div>
+
+<!-- ============================= -->
+
+<div class="grid grid-cols-3 metrics-grid">
+
+    <!-- Profile -->
+
+    <!-- <div class="card metric-card">
+
+        <div class="metric-icon blue">
+
+            👤
+
+        </div>
+
+        <div class="metric-info">
+
+            <h3>Profile Status</h3>
+
+            <div class="metric-val">
+
+                Complete
+
+            </div>
+
+        </div>
+
+    </div> -->
+
+    <!-- Resume -->
+
+    <!-- <div class="card metric-card">
+
+        <div class="metric-icon green">
+
+            📄
+
+        </div>
+
+        <div class="metric-info">
+
+            <h3>Resume Status</h3>
+
+            <div class="metric-val">
+
+                Uploaded
+
+            </div>
+
+        </div>
+
+    </div> -->
+
+    <!-- AI -->
+
+    <!-- <div class="card metric-card">
+
+        <div class="metric-icon gold">
+
+            🤖
+
+        </div>
+
+        <div class="metric-info">
+
+            <h3>Latest AI Score</h3>
+
+            <div class="metric-val">
+
+                85 / 100
+
+            </div>
+
+        </div>
+
+    </div> -->
+
+</div>
+
+<!-- ============================= -->
+
+<h2 class="section-title">
+
+    Quick Actions
+
+</h2>
+
+<div class="grid grid-cols-3">
+
+    <a href="/profile/" class="card card-interactive" style="text-align:center;padding:30px;">
+
+        <div style="font-size:45px;">👤</div>
+
+        <h3 style="margin-top:15px;">Complete Profile</h3>
+
+        <p class="text-secondary">
+
+            Update your academic and professional information.
+
+        </p>
+
+    </a>
+
+    <a href="/resume/upload/" class="card card-interactive" style="text-align:center;padding:30px;">
+
+        <div style="font-size:45px;">📄</div>
+
+        <h3 style="margin-top:15px;">Upload Resume</h3>
+
+        <p class="text-secondary">
+
+            Upload your latest resume for AI analysis.
+
+        </p>
+
+    </a>
+
+    <!-- <a href="/analysis/" class="card card-interactive" style="text-align:center;padding:30px;">
+
+        <div style="font-size:45px;">🤖</div>
+
+        <h3 style="margin-top:15px;">AI Analysis</h3>
+
+        <p class="text-secondary">
+
+            Generate AI-powered career recommendations.
+
+        </p>
+
+    </a> -->
+
+    <a href="/analysis/history/" class="card card-interactive" style="text-align:center;padding:30px;">
+
+        <div style="font-size:45px;">📊</div>
+
+        <h3 style="margin-top:15px;">Analysis History</h3>
+
+        <p class="text-secondary">
+
+            View all previous AI analysis reports.
+
+        </p>
+
+    </a>
+
+</div>
+
+<br><br>
+
+<h2 class="section-title">
+
+    Latest AI Career Summary
+
+</h2>
+
+<div class="section-title">
+
+    <h2>Latest AI Career Summary</h2>
+
+    <a href="/analysis/" class="text-primary-gradient" style="font-size:15px;font-weight:600;">
+
+        View Complete Analysis →
+
+    </a>
+
+</div>
+
+<div class="grid grid-cols-2" style="margin-bottom:40px;gap:25px;">
+
+    <!-- AI Summary -->
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">🤖 AI Career Summary</h3>
+
+        <p class="text-secondary">
+
+            Based on your resume and profile, you are best suited for a
+            <strong>Python Full Stack Developer</strong> role.
+
+            Your resume demonstrates strong programming fundamentals but
+            requires improvement in backend development, version control
+            and deployment practices.
+
+        </p>
+
+        <br>
+
+        <div class="badge badge-success">
+
+            Overall AI Score : 85 / 100
+
+        </div>
+
+    </div>
+
+    <!-- Career Domain -->
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">🎯 Recommended Career Domain</h3>
+
+        <ul style="line-height:2;">
+
+            <li>Python Full Stack Development</li>
+
+            <li>Backend Development</li>
+
+            <li>Software Engineering</li>
+
+            <li>Cloud Application Development</li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+
+<div class="grid grid-cols-2" style="margin-bottom:40px;gap:25px;">
+
+    <!-- Missing Skills -->
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">
+
+            🚀 Skills To Learn
+
+        </h3>
+
+        <div class="tag-container">
+
+            <span class="keyword-tag tag-missing">
+
+                Django REST Framework
+
+            </span>
+
+            <span class="keyword-tag tag-missing">
+
+                Git
+
+            </span>
+
+            <span class="keyword-tag tag-missing">
+
+                Docker
+
+            </span>
+
+            <span class="keyword-tag tag-missing">
+
+                AWS Basics
+
+            </span>
+
+            <span class="keyword-tag tag-missing">
+
+                CI/CD
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- Existing Skills -->
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">
+
+            ✅ Skills Identified
+
+        </h3>
+
+        <div class="tag-container">
+
+            <span class="keyword-tag tag-found">
+
+                Python
+
+            </span>
+
+            <span class="keyword-tag tag-found">
+
+                HTML
+
+            </span>
+
+            <span class="keyword-tag tag-found">
+
+                CSS
+
+            </span>
+
+            <span class="keyword-tag tag-found">
+
+                JavaScript
+
+            </span>
+
+            <span class="keyword-tag tag-found">
+
+                MySQL
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================== -->
+
+<div class="grid grid-cols-2" style="margin-bottom:40px;gap:25px;">
+
+    <!-- Learning Priority -->
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">
+
+            📚 Learning Priority
+
+        </h3>
+
+        <ol style="line-height:2;">
+
+            <li>Git & GitHub</li>
+
+            <li>Django REST Framework</li>
+
+            <li>Docker</li>
+
+            <li>Cloud Deployment</li>
+
+            <li>CI/CD Basics</li>
+
+        </ol>
+
+    </div>
+
+
+</div>
+
+<!-- ========================================== -->
+
+<!-- <div class="section-title">
+
+    <h2>Recent Activities</h2>
+
+</div>
+
+<div class="card">
+
+    <div class="section-title">
+
+        <h2>Recent Activities</h2>
+
+    </div>
+
+    <div class="history-timeline">
+
+        <div class="timeline-item">
+
+            <div class="timeline-card">
+
+                <div class="timeline-meta">
+
+                    <h4>👤 Profile Updated</h4>
+
+                    <p class="text-secondary">
+                        Your professional profile was updated successfully.
+                    </p>
+
+                    <div class="timeline-date">
+
+                        Today • 10:30 AM
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item">
+
+            <div class="timeline-card">
+
+                <div class="timeline-meta">
+
+                    <h4>📄 Resume Uploaded</h4>
+
+                    <p class="text-secondary">
+                        Resume_Python_FullStack.pdf uploaded successfully.
+                    </p>
+
+                    <div class="timeline-date">
+
+                        Yesterday • 04:45 PM
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item">
+
+            <div class="timeline-card">
+
+                <div class="timeline-meta">
+
+                    <h4>🤖 AI Analysis Completed</h4>
+
+                    <p class="text-secondary">
+
+                        AI analyzed your resume and generated personalized career insights.
+
+                    </p>
+
+                    <div class="timeline-date">
+
+                        Yesterday • 04:47 PM
+
+                    </div>
+
+                </div>
+
+                <div class="timeline-score">
+
+                    <span class="badge badge-success">
+
+                        Score : 85 / 100
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="timeline-item">
+
+            <div class="timeline-card">
+
+                <div class="timeline-meta">
+
+                    <h4>🚀 Learning Recommendation Generated</h4>
+
+                    <p class="text-secondary">
+
+                        AI suggested learning Git, Django REST Framework,
+                        Docker and Cloud Deployment.
+
+                    </p>
+
+                    <div class="timeline-date">
+
+                        Yesterday • 04:48 PM
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div> -->
+
+<!-- <br><br> -->
+
+<div class="grid grid-cols-2">
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">
+
+            📈 Career Progress
+
+        </h3>
+
+        <div style="margin-bottom:20px;">
+
+            <label>Profile Completion</label>
+
+            <div class="progress-bar-container" style="display:block;">
+                <div class="progress-bar-fill" style="width:90%;"></div>
+            </div>
+
+        </div>
+
+        <div style="margin-bottom:20px;">
+
+            <label>Resume Quality</label>
+
+            <div class="progress-bar-container" style="display:block;">
+                <div class="progress-bar-fill" style="width:85%;"></div>
+            </div>
+
+        </div>
+
+        <div>
+
+            <label>Placement Readiness</label>
+
+            <div class="progress-bar-container" style="display:block;">
+                <div class="progress-bar-fill" style="width:78%;"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3 style="margin-bottom:20px;">
+
+            🎯 Next Recommended Action
+
+        </h3>
+
+        <div class="checklist-item">
+
+            <div class="check-icon warning">
+
+                1
+
+            </div>
+
+            <div>
+
+                <strong>Complete Your GitHub Portfolio</strong>
+
+                <p class="text-secondary">
+
+                    Upload at least two Full Stack projects.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="checklist-item">
+
+            <div class="check-icon warning">
+
+                2
+
+            </div>
+
+            <div>
+
+                <strong>Learn Docker</strong>
+
+                <p class="text-secondary">
+
+                    Containerize your Django applications.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="checklist-item">
+
+            <div class="check-icon success">
+
+                ✓
+
+            </div>
+
+            <div>
+
+                <strong>Python Fundamentals</strong>
+
+                <p class="text-secondary">
+
+                    Completed successfully.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- <div class="table-container animate-slide-up">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Target Job Role</th>
+                <th>ATS Score</th>
+                <th>Status</th>
+                <th>Scanned Date</th>
+                <th style="text-align: right;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Resume_Backend_Developer_2026.pdf</strong></td>
+                <td>Django & React Developer</td>
+                <td>
+                    <span class="badge badge-success">85 / 100</span>
+                </td>
+                <td>Completed</td>
+                <td class="text-secondary">July 10, 2026</td>
+                <td style="text-align: right;">
+                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Resume_General_Frontend_v3.pdf</strong></td>
+                <td>Frontend UI Architect</td>
+                <td>
+                    <span class="badge badge-success">82 / 100</span>
+                </td>
+                <td>Completed</td>
+                <td class="text-secondary">July 08, 2026</td>
+                <td style="text-align: right;">
+                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Resume_Draft_Fullstack.docx</strong></td>
+                <td>Fullstack Engineer</td>
+                <td>
+                    <span class="badge badge-warning">76 / 100</span>
+                </td>
+                <td>Completed</td>
+                <td class="text-secondary">July 04, 2026</td>
+                <td style="text-align: right;">
+                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Resume_Legacy_Data_Science.pdf</strong></td>
+                <td>Data Analyst</td>
+                <td>
+                    <span class="badge badge-danger">58 / 100</span>
+                </td>
+                <td>Needs Work</td>
+                <td class="text-secondary">June 28, 2026</td>
+                <td style="text-align: right;">
+                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> -->
+{% endblock %}

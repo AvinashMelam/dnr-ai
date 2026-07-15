@@ -83,19 +83,40 @@ WSGI_APPLICATION = 'myproj.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+import os
+import dj_database_url
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dnr',
-        'USER': 'root',
-        'PASSWORD': 'root123',
-        'HOST': 'localhost',
-        'PORT': '3306',
+if os.environ.get("DATABASE_URL"):
+
+    DATABASES = {
+
+        "default": dj_database_url.config(
+            conn_max_age=600
+        )
+
     }
-}
 
+else:
 
+    DATABASES = {
+
+        "default": {
+
+            "ENGINE": "django.db.backends.mysql",
+
+            "NAME": "dnr",
+
+            "USER": "root",
+
+            "PASSWORD": "root123",
+
+            "HOST": "localhost",
+
+            "PORT": "3306",
+
+        }
+
+    }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

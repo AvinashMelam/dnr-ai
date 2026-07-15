@@ -335,53 +335,97 @@
 
                 <div class="card">
 
-                    <div class="card-header">
-                        <h3>Branch Performance</h3>
+                    <div class="table-card">
+
+                        <div class="table-header">
+
+                            <h3>📊 Branch Performance Analytics</h3>
+
+                            <p>Average performance across all departments</p>
+
+                        </div>
+
+                        <table class="analytics-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Department</th>
+                                    <th>ATS Score</th>
+                                    <th>Technical</th>
+                                    <th>Job Match</th>
+                                    <th>Interview</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for branch in branch_performance %}
+
+                                <tr>
+
+                                    <td>
+
+                                        <span class="branch-badge">
+
+                                            {{ branch.resume__student__branch }}
+
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="score-pill ats">
+
+                                            {{ branch.avg_ats|floatformat:0 }}%
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="score-pill tech">
+
+                                            {{ branch.avg_technical|floatformat:0 }}%
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="score-pill job">
+
+                                            {{ branch.avg_job|floatformat:0 }}%
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="score-pill interview">
+
+                                            {{ branch.avg_interview|floatformat:0 }}%
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
                     </div>
-
-                    <table class="table">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>Branch</th>
-
-                                <th>ATS</th>
-
-                                <th>Technical</th>
-
-                                <th>Job Match</th>
-
-                                <th>Interview</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            {% for branch in branch_performance %}
-
-                            <tr>
-
-                                <td>{{ branch.resume__student__branch }}</td>
-
-                                <td>{{ branch.avg_ats|floatformat:0 }}%</td>
-
-                                <td>{{ branch.avg_technical|floatformat:0 }}%</td>
-
-                                <td>{{ branch.avg_job|floatformat:0 }}%</td>
-
-                                <td>{{ branch.avg_interview|floatformat:0 }}%</td>
-
-                            </tr>
-
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
 
                 </div>
 

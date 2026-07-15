@@ -91,7 +91,46 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'students/dashboard.html')
+    profile = get_object_or_404(
+            StudentProfile,
+            user=request.user
+        )
+
+    latest_resume = Resume.objects.filter(
+        student=profile
+    ).order_by("-uploaded_at").first()
+
+    analysis = None
+
+    if latest_resume and latest_resume.analysis_status == "Completed":
+
+        analysis = AIAnalysis.objects.filter(
+            resume=latest_resume
+        ).first()
+
+    recent_resumes = Resume.objects.filter(
+        student=profile
+    ).order_by("-uploaded_at")
+
+    context = {
+
+        "profile": profile,
+
+        "resume": latest_resume,
+
+        "analysis": analysis,
+        
+        "recent_resumes": recent_resumes,
+
+    }
+
+    print(context)
+
+    return render(
+        request,
+        "students/dashboard.html",
+        context
+    )
 
 @login_required(login_url='login')
 def profile(request):

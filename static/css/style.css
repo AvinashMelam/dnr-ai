@@ -1254,3 +1254,147 @@ a {
     cursor: not-allowed;
 
 }
+
+/* table design */
+
+.table-card {
+
+    background: #fff;
+
+    border-radius: 18px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
+
+    overflow: hidden;
+
+}
+
+.table-header {
+
+    padding: 24px 30px;
+
+    border-bottom: 1px solid #edf2f7;
+
+}
+
+.table-header h3 {
+
+    font-size: 22px;
+
+    margin-bottom: 6px;
+
+}
+
+.table-header p {
+
+    color: #64748b;
+
+    font-size: 14px;
+
+}
+
+.analytics-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+}
+
+.analytics-table thead {
+
+    background: #f8fafc;
+
+}
+
+.analytics-table th {
+
+    padding: 18px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    color: #475569;
+
+    font-weight: 700;
+
+}
+
+.analytics-table td {
+
+    padding: 18px;
+
+    text-align: center;
+
+    border-top: 1px solid #eef2f7;
+
+}
+
+.analytics-table tbody tr {
+
+    transition: .3s;
+
+}
+
+.analytics-table tbody tr:hover {
+
+    background: #f8fbff;
+
+    transform: scale(1.005);
+
+}
+
+.branch-badge {
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    padding: 8px 18px;
+
+    border-radius: 30px;
+
+    font-weight: 600;
+
+}
+
+.score-pill {
+
+    width: 70px;
+
+    margin: auto;
+
+    padding: 8px 0;
+
+    border-radius: 30px;
+
+    font-weight: 700;
+
+    color: #fff;
+
+}
+
+.ats {
+
+    background: #3b82f6;
+
+}
+
+.tech {
+
+    background: #10b981;
+
+}
+
+.job {
+
+    background: #f59e0b;
+
+}
+
+.interview {
+
+    background: #8b5cf6;
+
+}

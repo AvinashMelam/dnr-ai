@@ -181,12 +181,6 @@
 
 <br><br>
 
-<h2 class="section-title">
-
-    Latest AI Career Summary
-
-</h2>
-
 <div class="section-title">
 
     <h2>Latest AI Career Summary</h2>
@@ -209,12 +203,7 @@
 
         <p class="text-secondary">
 
-            Based on your resume and profile, you are best suited for a
-            <strong>Python Full Stack Developer</strong> role.
-
-            Your resume demonstrates strong programming fundamentals but
-            requires improvement in backend development, version control
-            and deployment practices.
+            {{ analysis.resume_summary }}
 
         </p>
 
@@ -222,7 +211,7 @@
 
         <div class="badge badge-success">
 
-            Overall AI Score : 85 / 100
+            Overall AI Score : {{ analysis.overall_score }}/100
 
         </div>
 
@@ -236,13 +225,11 @@
 
         <ul style="line-height:2;">
 
-            <li>Python Full Stack Development</li>
+            {% for role in analysis.job_roles.splitlines %}
 
-            <li>Backend Development</li>
+            <li>{{ role }}</li>
 
-            <li>Software Engineering</li>
-
-            <li>Cloud Application Development</li>
+            {% endfor %}
 
         </ul>
 
@@ -266,35 +253,16 @@
 
         <div class="tag-container">
 
-            <span class="keyword-tag tag-missing">
-
-                Django REST Framework
-
-            </span>
+            {% for skill in analysis.missing_skills.splitlines %}
 
             <span class="keyword-tag tag-missing">
 
-                Git
+                {{ skill }}
 
             </span>
 
-            <span class="keyword-tag tag-missing">
+            {% endfor %}
 
-                Docker
-
-            </span>
-
-            <span class="keyword-tag tag-missing">
-
-                AWS Basics
-
-            </span>
-
-            <span class="keyword-tag tag-missing">
-
-                CI/CD
-
-            </span>
 
         </div>
 
@@ -312,35 +280,16 @@
 
         <div class="tag-container">
 
-            <span class="keyword-tag tag-found">
-
-                Python
-
-            </span>
+            {% for skill in analysis.found_skills.splitlines %}
 
             <span class="keyword-tag tag-found">
 
-                HTML
+                {{ skill }}
 
             </span>
 
-            <span class="keyword-tag tag-found">
+            {% endfor %}
 
-                CSS
-
-            </span>
-
-            <span class="keyword-tag tag-found">
-
-                JavaScript
-
-            </span>
-
-            <span class="keyword-tag tag-found">
-
-                MySQL
-
-            </span>
 
         </div>
 
@@ -364,15 +313,12 @@
 
         <ol style="line-height:2;">
 
-            <li>Git & GitHub</li>
+            {% for item in analysis.learning_priority.splitlines %}
 
-            <li>Django REST Framework</li>
+            <li>{{ item }}</li>
 
-            <li>Docker</li>
+            {% endfor %}
 
-            <li>Cloud Deployment</li>
-
-            <li>CI/CD Basics</li>
 
         </ol>
 
@@ -541,7 +487,7 @@
             <label>Resume Quality</label>
 
             <div class="progress-bar-container" style="display:block;">
-                <div class="progress-bar-fill" style="width:85%;"></div>
+                <div class="progress-bar-fill" style="width: {{ analysis.overall_score }}%;"></div>
             </div>
 
         </div>
@@ -551,7 +497,8 @@
             <label>Placement Readiness</label>
 
             <div class="progress-bar-container" style="display:block;">
-                <div class="progress-bar-fill" style="width:78%;"></div>
+                <div class="progress-bar-fill" style="width: {{ analysis.interview_readiness_score|floatformat:0 }}%">
+                </div>
             </div>
 
         </div>
@@ -635,7 +582,7 @@
     </div>
 
 </div>
-<!-- <div class="table-container animate-slide-up">
+<div class="table-container animate-slide-up">
     <table class="custom-table">
         <thead>
             <tr>
@@ -648,55 +595,88 @@
             </tr>
         </thead>
         <tbody>
+
+            {% for resume in recent_resumes %}
+
             <tr>
-                <td><strong>Resume_Backend_Developer_2026.pdf</strong></td>
-                <td>Django & React Developer</td>
+
                 <td>
-                    <span class="badge badge-success">85 / 100</span>
+
+                    <strong>
+
+                        {{ resume.resume_file.name|cut:"resumes/" }}
+
+                    </strong>
+
                 </td>
-                <td>Completed</td>
-                <td class="text-secondary">July 10, 2026</td>
-                <td style="text-align: right;">
-                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Resume_General_Frontend_v3.pdf</strong></td>
-                <td>Frontend UI Architect</td>
+
                 <td>
-                    <span class="badge badge-success">82 / 100</span>
+
+                    {{ resume.target_job_role }}
+
                 </td>
-                <td>Completed</td>
-                <td class="text-secondary">July 08, 2026</td>
-                <td style="text-align: right;">
-                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Resume_Draft_Fullstack.docx</strong></td>
-                <td>Fullstack Engineer</td>
+
                 <td>
-                    <span class="badge badge-warning">76 / 100</span>
+
+                    {% if resume.analysis %}
+
+                    <span class="badge badge-success">
+
+                        {{ resume.analysis.ats_score }}/100
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge badge-warning">
+
+                        Pending
+
+                    </span>
+
+                    {% endif %}
+
                 </td>
-                <td>Completed</td>
-                <td class="text-secondary">July 04, 2026</td>
-                <td style="text-align: right;">
-                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Resume_Legacy_Data_Science.pdf</strong></td>
-                <td>Data Analyst</td>
+
                 <td>
-                    <span class="badge badge-danger">58 / 100</span>
+
+                    {{ resume.analysis_status }}
+
                 </td>
-                <td>Needs Work</td>
-                <td class="text-secondary">June 28, 2026</td>
-                <td style="text-align: right;">
-                    <a href="/students/analysis/" class="btn btn-outline btn-sm">Report</a>
+
+                <td>
+
+                    {{ resume.uploaded_at|date:"M d, Y" }}
+
                 </td>
+
+                <td>
+
+                    {% if resume.analysis %}
+
+                    <a href="{% url 'analysis' resume.id %}" class="btn btn-outline btn-sm">
+
+                        Report
+
+                    </a>
+
+                    {% else %}
+
+                    <a href="{% url 'analyze_resume' resume.id %}" class="btn btn-primary btn-sm">
+
+                        Analyze
+
+                    </a>
+
+                    {% endif %}
+
+                </td>
+
             </tr>
+
+            {% endfor %}
+
         </tbody>
     </table>
-</div> -->
+</div>
 {% endblock %}

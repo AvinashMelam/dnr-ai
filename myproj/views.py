@@ -155,9 +155,12 @@ def profile(request):
 
         profile.save()
 
-        messages.success(request, "Profile Updated Successfully.")
+        messages.success(
+            request,
+            "✅ Profile updated successfully! Now upload your resume to start AI analysis."
+        )
 
-        return redirect("profile")
+        return redirect("resume_upload")
     
     context = {
         "profile": profile

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="chat-card">
+
+        <div class="chat-header">
+
+            <div>
+
+                <h3 style="color: white;" class="mb-1">
+                    🤖 AI Placement Officer
+                </h3>
+
+                <small>
+                    Ask anything about students, resumes, ATS scores and placement analytics.
+                </small>
+
+            </div>
+
+            <span class="badge bg-success">
+                Online
+            </span>
+
+        </div>
+
+
+        <div id="chatBox" class="chat-body">
+
+            <div class="welcome-box">
+
+                <h5>Welcome 👋</h5>
+
+                <p>
+                    I can answer questions about:
+
+                    <br>
+
+                    • Student Performance
+
+                    <br>
+
+                    • ATS Scores
+
+                    <br>
+
+                    • Placement Analytics
+
+                    <br>
+
+                    • Resume Insights
+
+                    <br>
+
+                    • Branch-wise Reports
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="chat-footer">
+
+            <textarea id="question" rows="2" class="form-control">
+
+            </textarea>
+
+            <button onclick="askAI()" class="btn btn-primary send-btn">
+
+                <i class="bi bi-send-fill"></i>
+
+                Ask AI
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    function askAI() {
+
+        let question = document.getElementById("question").value.trim();
+
+        if (question == "") {
+            return;
+        }
+
+        let chatBox = document.getElementById("chatBox");
+
+        // User Message
+        chatBox.innerHTML += `
+        <div class="user-msg">
+        ${question}</div>`;
+
+        // Loading Message
+        let loadingId = "loading_" + Date.now();
+
+        chatBox.innerHTML += `
+        <div id="${loadingId}">
+            <p>
+                <b>AI:</b>
+                <span class="spinner-border spinner-border-sm text-primary"></span>
+                Thinking...
+            </p>
+        </div>
+    `;
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        fetch("/ai-chat/ask/", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+
+            body: JSON.stringify({
+                question: question
+            })
+
+        })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                document.getElementById(loadingId).innerHTML = `
+            <p><b>AI:</b> ${data.answer}</p>
+            <hr>
+        `;
+
+                document.getElementById("question").value = "";
+
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+            })
+
+            .catch(error => {
+
+                document.getElementById(loadingId).innerHTML = `
+            <p class="text-danger">
+                <b>AI:</b> Something went wrong.
+            </p>
+            <hr>
+        `;
+
+            });
+
+    }
+
+</script>
+{% endblock %}

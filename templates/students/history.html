@@ -7,11 +7,13 @@
 <div
     style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
     <div>
-        <h1 style="font-size: 2.25rem; margin-bottom: 6px;">My Resumes</h1>
-        <p class="text-secondary">Manage your uploaded resumes and analyze them against different job opportunities.</p>
+        <h1 style="font-size: 2.25rem; margin-bottom: 6px;">{{ page_title }}</h1>
+        <p class="text-secondary">{{ page_description }}</p>
     </div>
     <div>
+        {% if show_upload_button %}
         <a href="/resume/upload/" class="btn btn-primary">Start New Analysis</a>
+        {% endif %}
     </div>
 </div>
 
@@ -39,9 +41,38 @@
                 </p>
                 {% endif %}
 
+
+                {% if resume.job_description %}
                 <p class="text-muted">
-                    Status : {{ resume.analysis_status }}
+                    <strong>Job Description:</strong>
+                    {{ resume.job_description|truncatechars:80 }}
                 </p>
+                {% else %}
+                <p class="text-muted">
+                    <strong>Job Description:</strong> Not Provided
+                </p>
+                {% endif %}
+
+                {% if analysis_page %}
+
+                <div class="analysis-summary">
+
+                    <p class="text-muted">
+                        <strong>Overall Score:</strong> {{ resume.analysis.overall_score }}
+                    </p>
+
+                    <p class="text-muted">
+                        <strong>ATS Score:</strong> {{ resume.analysis.ats_score }}
+                    </p>
+
+                    <p class="text-muted">
+                        <strong>Interview Ready:</strong> {{ resume.analysis.interview_readiness_score }}
+                    </p>
+
+                </div>
+
+                {% endif %}
+
 
             </div>
 
@@ -49,7 +80,15 @@
 
                 <div style="font-size:1rem;font-weight:600;margin-bottom:15px;">
 
-                    {{ resume.analysis_status }}
+                    {% if analysis_page %}
+
+                    ✅ Report Ready
+
+                    {% else %}
+
+                    Status : {{ resume.analysis_status }}
+
+                    {% endif %}
 
                 </div>
 
@@ -61,6 +100,14 @@
 
                     </a>
 
+                    {% if analysis_page %}
+
+                    <a href="/analysis/{{ resume.id }}/" class="btn btn-success btn-sm">
+                        View Report
+                    </a>
+
+                    {% else %}
+
                     {% if resume.analysis_status == "Completed" %}
 
                     <a href="/analysis/{{ resume.id }}/" class="btn btn-success btn-sm">
@@ -70,9 +117,7 @@
                     {% else %}
 
                     <a href="/resume/analyze/{{ resume.id }}/" class="btn btn-primary btn-sm analyze-btn">
-
                         Analyze
-
                     </a>
 
                     <div id="loadingOverlay">
@@ -83,7 +128,6 @@
                                 <span></span>
                             </div>
 
-
                             <h2>🤖 DNR AI</h2>
 
                             <p id="loadingText">
@@ -93,6 +137,9 @@
                         </div>
 
                     </div>
+
+                    {% endif %}
+
                     {% endif %}
 
 

@@ -13,6 +13,7 @@ from google import genai
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from google.genai import types
+from collections import Counter
 
 from google.genai.errors import APIError
 
@@ -124,8 +125,6 @@ def dashboard(request):
 
     }
 
-    print(context)
-
     return render(
         request,
         "students/dashboard.html",
@@ -162,15 +161,26 @@ def profile(request):
 
         return redirect("resume_upload")
     
+    # Latest uploaded resume
+    latest_resume = Resume.objects.filter(
+        student=profile
+    ).order_by("-uploaded_at").first()
+
+    if latest_resume:
+        resume_status = "Uploaded"
+        analysis_status = latest_resume.analysis_status
+    else:
+        resume_status = "Not Uploaded"
+        analysis_status = "Pending"
+
+
     context = {
-        "profile": profile
+        "profile": profile,
+        "resume_status": resume_status,
+        "analysis_status": analysis_status
     }
 
     return render(request, 'students/profile.html', context)
-
-@login_required(login_url='login')
-def edit_profile(request):
-    return render(request, 'students/profile.html')
 
 
 
@@ -217,7 +227,11 @@ def resume_history(request):
     ).order_by("-uploaded_at")
 
     context = {
-        "resumes": resumes
+        "resumes": resumes,
+        "page_title": "My Resumes",
+        "page_description": "Manage your uploaded resumes and analyze them against different job opportunities.",
+        "show_upload_button": True,
+        "analysis_page": False,
     }
 
     return render(request, "students/history.html", context)
@@ -261,7 +275,7 @@ def analyze_resume(request, resume_id):
             "Please add your Gemini API Key in your profile before using AI Analysis."
         )
 
-        return redirect("profile")   # <-- change to your profile URL name
+        return redirect("profile")
 
     # -------------------------------
     # Gemini Analysis
@@ -370,7 +384,25 @@ def analysis(request, resume_id):
 
 @login_required(login_url='login')
 def analysis_history(request):
-    return render(request, 'students/history.html')
+    profile = get_object_or_404(
+        StudentProfile,
+        user=request.user
+    )
+
+    resumes = Resume.objects.filter(
+        student=profile,
+        analysis_status="Completed"
+    ).order_by("-uploaded_at")
+
+    context = {
+            "resumes": resumes,
+            "page_title": "Analysis History",
+            "page_description": "View all AI generated resume analysis reports.",
+            "show_upload_button": False,
+            "analysis_page": True,
+        }
+
+    return render(request, 'students/history.html', context)
 
 @login_required(login_url='login')
 def feedback(request):
@@ -468,8 +500,6 @@ def admin_dashboard(request):
     "resume__student__user"
     ).order_by("-overall_score")[:10]
 
-    print("top_students")
-    print(top_students)
     # Students Without Resume
     students_without_resume = StudentProfile.objects.filter(
     resumes__isnull=True
@@ -498,6 +528,33 @@ def admin_dashboard(request):
         avg_job=Avg("job_match_score"),
         avg_interview=Avg("interview_readiness_score")
     ).order_by("-avg_ats")
+    branch_labels = []
+    branch_ats = []
+    branch_technical = []
+    branch_job = []
+    branch_interview = []
+
+    for branch in branch_performance:
+
+        branch_labels.append(
+            branch["resume__student__branch"] or "Unknown"
+        )
+
+        branch_ats.append(
+            round(branch["avg_ats"] or 0)
+        )
+
+        branch_technical.append(
+            round(branch["avg_technical"] or 0)
+        )
+
+        branch_job.append(
+            round(branch["avg_job"] or 0)
+        )
+
+        branch_interview.append(
+            round(branch["avg_interview"] or 0)
+        )
 
 
     # Interview readyness
@@ -515,8 +572,6 @@ def admin_dashboard(request):
     else:
         interview_percentage = 0
 
-
-
     quality_labels = [
     "Excellent",
     "Good",
@@ -530,6 +585,28 @@ def admin_dashboard(request):
         average,
         poor
     ]
+
+    job_counter = Counter()
+
+    for resume in Resume.objects.all():
+
+        if resume.job_description:
+            role = resume.job_description.split("\n")[0].strip()
+            job_counter[role] += 1
+    top_job_roles = job_counter.most_common(10)
+
+    skill_counter = Counter()
+
+    for analysis in AIAnalysis.objects.all():
+
+        if analysis.missing_skills:
+
+            skills = analysis.missing_skills.split(",")
+
+            for skill in skills:
+                skill_counter[skill.strip()] += 1
+
+    top_skills = skill_counter.most_common(10)
 
     # Pass Context
 
@@ -567,18 +644,13 @@ def admin_dashboard(request):
     }
         # For Charts
     context["branch_labels"] = [
-    i["branch"] for i in branch_stats
+        i["branch"] if i["branch"] else "Unknown"
+        for i in branch_stats
     ]
 
     context["branch_data"] = [
-    i["total"] for i in branch_stats
+        i["total"] if i["total"] else 0 for i in branch_stats
     ]
-
-    branch_labels = [b["branch"] for b in branch_stats]
-    branch_data = [b["total"] for b in branch_stats]
-
-    context["branch_labels"] = branch_labels
-    context["branch_data"] = branch_data
 
     context["quality_labels"] = quality_labels
     context["quality_data"] = quality_data
@@ -589,7 +661,13 @@ def admin_dashboard(request):
     context["interview_percentage"] = interview_percentage
 
     context["branch_performance"] = branch_performance
-
+    context["branch_labels"] = branch_labels
+    context["branch_ats"] = branch_ats
+    context["branch_technical"] = branch_technical
+    context["branch_job"] = branch_job
+    context["branch_interview"] = branch_interview
+    context["top_job_roles"] = top_job_roles
+    context["top_skills"] = top_skills
 
     return render(request, 'management/admin_dashboard.html', context)
 
@@ -689,3 +767,17 @@ def test_api_key(request):
 
     # Reject non-POST requests
     return JsonResponse({"status": "error", "message": "Invalid request method."})
+
+# API Keys
+
+def api_keys(request):
+
+    profiles = StudentProfile.objects.select_related("user")
+
+    return render(
+        request,
+        "students/api_keys.html",
+        {
+            "profiles": profiles
+        }
+    )

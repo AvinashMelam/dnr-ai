@@ -79,8 +79,10 @@
                     <span style="font-family:'Outfit'; font-weight:800; font-size:1.1rem;">ATS</span>
                 </div>
                 <div class="metric-info">
-                    <h3>Average ATS Score</h3>
-                    <div class="metric-val">{{ avg_ats }}%</div>
+                    <div class="card-header">
+                        <h2>ATS Score Card</h2>
+                    </div>
+                    <div id="atsGauge"></div>
                 </div>
             </div>
 
@@ -90,8 +92,8 @@
                     <span style="font-family:'Outfit'; font-weight:800; font-size:1.1rem;">TEC</span>
                 </div>
                 <div class="metric-info">
-                    <h3>Average Technical</h3>
-                    <div class="metric-val">{{avg_technical}}%</div>
+                    <h2>Average Technical</h2>
+                    <div id="technicalGauge"></div>
                 </div>
             </div>
 
@@ -101,8 +103,8 @@
                     <span style="font-family:'Outfit'; font-weight:800; font-size:1.1rem;">RDY</span>
                 </div>
                 <div class="metric-info">
-                    <h3>Interview Ready</h3>
-                    <div class="metric-val">{{avg_interview}}%</div>
+                    <h2>Interview Ready</h2>
+                    <div id="interviewGauge"></div>
                 </div>
             </div>
         </section>
@@ -128,54 +130,21 @@
                     </div>
                 </div> -->
 
-                <!-- Branch-wise Distribution Lists -->
+                <!-- Target Job Roles -->
                 <div class="card">
-                    <h3 class="section-title">Branch-wise Distribution</h3>
+                    <h3 class="section-title">Top Target Job Roles</h3>
+                    <div>
+                        {% for role,count in top_job_roles %}
 
-                    <!-- Internal Tab/Switch Header Layout for Branch Metrics -->
-                    <div class="tabs-header" style="margin-bottom: 16px;">
-                        <button class="tab-btn active" id="btn-branch-count">Student Counts</button>
-                        <button class="tab-btn" id="btn-branch-ats">Average ATS Score</button>
-                    </div>
+                        <span class="keyword-tag tag-found">
+                            {{ role }} ({{ count }})
+                        </span><br> <br>
 
-                    <!-- Panel 1: Counts -->
-                    <div id="branch-count-panel">
-                        {% for branch in branch_stats %}
-
-                        <div class="checklist-item"
-                            style="padding: 10px 0; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 600;">{{ branch.branch }}</span>
-                            <span class="badge badge-primary" style="font-size: 0.9rem; padding: 4px 12px;">
-                                {{ branch.total }} Students</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <!-- Panel 2: Branch ATS (Hidden by default, easy to activate dynamically) -->
-                    <div id="branch-ats-panel" style="display: none;">
-                        {% for b in branch_ats %}
-
-                        <div class="checklist-item"
-                            style="padding: 10px 0; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 600;">{{ b.resume__student__branch }}</span>
-                            <span class="badge badge-success" style="font-size: 0.9rem; padding: 4px 12px;">
-                                {{ b.avg_ats}} Avg
-                                ATS</span>
-                        </div>
                         {% endfor %}
 
                     </div>
                 </div>
 
-
-                <!-- # new will remove -->
-                <!-- <div class="card">
-
-                    <h3>Students by Branch</h3>
-
-                    <canvas id="branchChart"></canvas>
-
-                </div> -->
 
                 <div class="card">
 
@@ -192,18 +161,6 @@
                 {{ branch_labels|json_script:"branch-labels" }}
                 {{ branch_data|json_script:"branch-data" }}
 
-
-                <!-- Target Job Roles -->
-                <div class="card">
-                    <h3 class="section-title">Top Target Job Roles</h3>
-                    <div class="tag-container">
-                        <span class="keyword-tag tag-found">Python Developer</span>
-                        <span class="keyword-tag tag-found">Data Analyst</span>
-                        <span class="keyword-tag tag-found">Java Developer</span>
-                        <span class="keyword-tag tag-found">Full Stack Developer</span>
-                        <span class="keyword-tag tag-found">AI Engineer</span>
-                    </div>
-                </div>
 
                 <!-- Interview Readiness breakdown -->
                 <div class="card">
@@ -226,112 +183,7 @@
                     </div>
                 </div>
 
-                <div class="card">
-
-                    <div class="card-header">
-                        <h3>Placement Readiness</h3>
-                    </div>
-
-                    <div id="interviewChart"></div>
-
-                </div>
-
                 {{ interview_percentage|json_script:"interview-percentage" }}
-
-            </div>
-
-            <!-- COLUMN B -->
-            <div style="display: flex; flex-direction: column; gap: 24px;">
-
-                <!-- Resume Quality Distribution (Using Progress Bars inside Card) -->
-                <div class="card">
-                    <h3 class="section-title">Resume Quality Distribution</h3>
-
-                    <div style="margin-bottom: 16px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 0.9rem; font-weight: 600;">Excellent</span>
-                            <span style="font-size: 0.9rem; font-weight: 700;">{{excellent_percent}}%</span>
-                        </div>
-                        <div
-                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
-                            <div style="width: {{excellent_percent}}%; height: 100%; background:
-                                var(--secondary); border-radius: 99px;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 16px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 0.9rem; font-weight: 600;">Good</span>
-                            <span style="font-size: 0.9rem; font-weight: 700;">{{good_percent}}%</span>
-                        </div>
-                        <div
-                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
-                            <div style="width: {{good_percent}}%; height: 100%; background:
-                                var(--primary-gradient); border-radius: 99px;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 16px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 0.9rem; font-weight: 600;">Average</span>
-                            <span style="font-size: 0.9rem; font-weight: 700;">{{average_percent}}%</span>
-                        </div>
-                        <div
-                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
-                            <div style="width: {{average_percent}}%; height: 100%; background: #f59e0b;
-                                border-radius: 99px;"></div>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span style="font-size: 0.9rem; font-weight: 600;">Poor</span>
-                            <span style="font-size: 0.9rem; font-weight: 700;">{{poor_percent}}%</span>
-                        </div>
-                        <div
-                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
-                            <div style="width: {{poor_percent}}%; height: 100%; background: #ef4444;
-                                border-radius: 99px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h3>Resume Quality Distribution</h3>
-
-                    </div>
-
-                    <div id="qualityChart"></div>
-
-                </div>
-
-                {{ quality_labels|json_script:"quality-labels" }}
-
-                {{ quality_data|json_script:"quality-data" }}
-
-                <!-- Branch wise ATS  -->
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h3>Average ATS Score by Branch</h3>
-
-                    </div>
-
-                    <div id="branchATSChart"></div>
-
-                </div>
-
-                {{ branch_ats_labels|json_script:"branch-ats-labels" }}
-
-                {{ branch_ats_data|json_script:"branch-ats-data" }}
-
 
                 <div class="card">
 
@@ -429,19 +281,117 @@
 
                 </div>
 
+            </div>
+
+            <!-- COLUMN B -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+
                 <!-- Missing Skills Checklist -->
                 <div class="card">
                     <h3 class="section-title" style="color: #ef4444;">Most Missing Skills</h3>
-                    <div class="tag-container">
-                        <span class="keyword-tag tag-missing">Docker</span>
-                        <span class="keyword-tag tag-missing">AWS</span>
-                        <span class="keyword-tag tag-missing">Git</span>
-                        <span class="keyword-tag tag-missing">React</span>
-                        <span class="keyword-tag tag-missing">SQL Optimization</span>
+                    <div>
+
+                        {% for skill,count in top_skills %}
+
+                        <span class="keyword-tag tag-missing">
+                            {{ skill }} ({{ count }})
+                        </span><br><br>
+
+                        {% endfor %}
+
                     </div>
                 </div>
 
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3>Resume Quality Distribution</h3>
+
+                    </div>
+
+                    <div id="qualityChart"></div>
+
+                </div>
+
+                {{ quality_labels|json_script:"quality-labels" }}
+
+                {{ quality_data|json_script:"quality-data" }}
+
+                <!-- Resume Quality Distribution (Using Progress Bars inside Card) -->
+                <div class="card">
+                    <h3 class="section-title">Resume Quality Distribution</h3>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Excellent</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{excellent_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{excellent_percent}}%; height: 100%; background:
+                                var(--secondary); border-radius: 99px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Good</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{good_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{good_percent}}%; height: 100%; background:
+                                var(--primary-gradient); border-radius: 99px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Average</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{average_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{average_percent}}%; height: 100%; background: #f59e0b;
+                                border-radius: 99px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Poor</span>
+                            <span style="font-size: 0.9rem; font-weight: 700;">{{poor_percent}}%</span>
+                        </div>
+                        <div
+                            style="height: 10px; background-color: var(--card-border); border-radius: 99px; overflow: hidden;">
+                            <div style="width: {{poor_percent}}%; height: 100%; background: #ef4444;
+                                border-radius: 99px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>Branch Performance Comparison</h3>
+                    </div>
+
+                    <div id="branchPerformanceChart"></div>
+
+                </div>
+
+                {{ branch_labels|json_script:"branch-labels" }}
+                {{ branch_ats|json_script:"branch-ats" }}
+                {{ branch_technical|json_script:"branch-technical" }}
+                {{ branch_job|json_script:"branch-job" }}
+                {{ branch_interview|json_script:"branch-interview" }}
+
             </div>
+
         </div>
 
         <!-- ROW 4: Table (Full-width Data Container) -->
@@ -523,6 +473,7 @@
 
 <!-- Script to toggle mobile menu and switch the local tab viewports -->
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script>
     const branchLabels = JSON.parse(
@@ -533,6 +484,7 @@
         document.getElementById("branch-data").textContent
     );
 
+
     // Resume Quality
     const qualityLabels = JSON.parse(
         document.getElementById("quality-labels").textContent
@@ -542,19 +494,58 @@
         document.getElementById("quality-data").textContent
     );
 
-    // Branch wise ATS
-    const branchATSLabels = JSON.parse(
-        document.getElementById("branch-ats-labels").textContent
-    );
-
-    const branchATSData = JSON.parse(
-        document.getElementById("branch-ats-data").textContent
-    );
 
     // Interview readyness
     const interviewPercentage = JSON.parse(
         document.getElementById("interview-percentage").textContent
     );
+
+
+    const branchATS = JSON.parse(
+        document.getElementById("branch-ats").textContent
+    );
+
+    const branchTechnical = JSON.parse(
+        document.getElementById("branch-technical").textContent
+    );
+
+    const branchJob = JSON.parse(
+        document.getElementById("branch-job").textContent
+    );
+
+    const branchInterview = JSON.parse(
+        document.getElementById("branch-interview").textContent
+    );
+
+
+    function createGauge(id, label, value) {
+
+        new ApexCharts(document.querySelector(id), {
+
+            chart: {
+                type: "radialBar",
+                height: 260
+            },
+
+            series: [value],
+
+            labels: [label],
+
+            plotOptions: {
+                radialBar: {
+                    hollow: {
+                        size: "65%"
+                    }
+                }
+            }
+
+        }).render();
+
+    }
+
+    createGauge("#atsGauge", "ATS", {{ avg_ats }});
+    createGauge("#technicalGauge", "Technical", {{ avg_technical }});
+    createGauge("#interviewGauge", "Interview", {{ avg_interview }});
 
     // Apex Chart
 
@@ -581,6 +572,88 @@
     );
 
     chart.render();
+
+
+    var options_branch_performance = {
+
+        chart: {
+            type: "bar",
+            height: 420,
+            toolbar: {
+                show: false
+            }
+        },
+
+        series: [
+            {
+                name: "ATS",
+                data: branchATS
+            },
+            {
+                name: "Technical",
+                data: branchTechnical
+            },
+            {
+                name: "Job Match",
+                data: branchJob
+            },
+            {
+                name: "Interview",
+                data: branchInterview
+            }
+        ],
+
+        xaxis: {
+            categories: branchLabels,
+            title: {
+                text: "Departments"
+            }
+        },
+
+        yaxis: {
+            min: 0,
+            max: 100,
+            title: {
+                text: "Average Score (%)"
+            }
+        },
+
+        plotOptions: {
+            bar: {
+                horizontal: false,      // <-- Vertical bars
+                columnWidth: "55%",
+                borderRadius: 6
+            }
+        },
+
+        dataLabels: {
+            enabled: true
+        },
+
+        legend: {
+            position: "top"
+        },
+
+        stroke: {
+            width: 1
+        },
+
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val + "%";
+                }
+            }
+        }
+
+    };
+
+    var chart_branch_performance = new ApexCharts(
+        document.querySelector("#branchPerformanceChart"),
+        options_branch_performance
+    );
+
+    chart_branch_performance.render();
 
     // quality Chart
 
@@ -646,130 +719,6 @@
 
     qualityChart.render();
 
-
-    // Branch wise ATS
-
-    var atsOptions = {
-
-        chart: {
-
-            type: 'bar',
-
-            height: 380,
-
-            toolbar: {
-
-                show: false
-
-            }
-
-        },
-
-        series: [{
-
-            name: 'ATS Score',
-
-            data: branchATSData
-
-        }],
-
-        xaxis: {
-
-            categories: branchATSLabels
-
-        },
-
-        yaxis: {
-
-            max: 100,
-
-            title: {
-
-                text: 'Average ATS Score'
-
-            }
-
-        },
-
-        dataLabels: {
-
-            enabled: true
-
-        },
-
-        plotOptions: {
-
-            bar: {
-
-                borderRadius: 8,
-
-                columnWidth: '50%'
-
-            }
-
-        }
-
-    };
-
-    var atsChart = new ApexCharts(
-
-        document.querySelector("#branchATSChart"),
-
-        atsOptions
-
-    );
-
-    atsChart.render();
-
-    // Interview readyness
-
-    var interviewOptions = {
-
-        chart: {
-            type: 'radialBar',
-            height: 380
-        },
-
-        series: [interviewPercentage],
-
-        labels: ['Placement Readiness'],
-
-        plotOptions: {
-
-            radialBar: {
-
-                hollow: {
-                    size: '65%'
-                },
-
-                dataLabels: {
-
-                    name: {
-                        fontSize: '18px'
-                    },
-
-                    value: {
-                        fontSize: '32px'
-                    }
-
-                }
-
-            }
-
-        }
-
-    };
-
-    var interviewChart = new ApexCharts(
-
-        document.querySelector("#interviewChart"),
-
-        interviewOptions
-
-    );
-
-    interviewChart.render();
-
     // Simple Header Mobile Toggle logic
     const toggleBtn = document.getElementById('mobile-nav-toggle');
     const menu = document.getElementById('navbar-menu');
@@ -800,21 +749,6 @@
             atsPanel.style.display = 'block';
         });
     }
-
-
-    // Charts
-    const branchChart = new Chart(
-        document.getElementById("branchChart"),
-        {
-            type: "pie",
-
-            data: {
-                labels: branchLabels,
-                datasets: [{
-                    data: branchData
-                }]
-            }
-        });
 
 
 </script>

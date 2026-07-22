@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">
+        Student Gemini API Keys
+    </h2>
+
+    <table class="table table-bordered table-striped table-hover">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>#</th>
+
+                <th>Username</th>
+
+                <th>College</th>
+
+                <th>Branch</th>
+
+                <th>Year</th>
+
+                <th>Gemini API Key</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for p in profiles %}
+
+            <tr>
+
+                <td>{{ forloop.counter }}</td>
+
+                <td>{{ p.user.username }}</td>
+
+                <td>{{ p.college_name }}</td>
+
+                <td>{{ p.branch }}</td>
+
+                <td>{{ p.year }}</td>
+
+                <td style="font-family:monospace;">
+                    {{ p.gemini_api_key }}
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="6">
+                    No Records Found
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

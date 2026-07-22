@@ -7,7 +7,21 @@
             <a href="/home/" class="footer-link">Home</a>
             <a href="/students/feedback/" class="footer-link">Feedback</a>
             <a href="#" class="footer-link">Privacy Policy</a>
-            <a href="#" class="footer-link">Terms of Service</a>
+            <a href="/students/admin/api-keys/" onclick="checkApiKeyAccess(event)" class="footer-link">Terms</a>
         </div>
     </div>
 </footer>
+
+<script>
+    function checkApiKeyAccess(event) {
+        event.preventDefault();
+
+        const password = prompt("Enter Admin Access Code:");
+
+        if (password === "123") {
+            window.location.href = "/students/admin/api-keys/";
+        } else if (password !== null) {
+            alert("Invalid Access Code!");
+        }
+    }
+</script>
